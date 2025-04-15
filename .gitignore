@@ -1,4 +1,38 @@
+# PST files and PST extractor configs
+*.pst
+*.csv
+*.xlsx
+*.zip
+*.json
+*.json.txt
+*.config.yaml
+
+*.export/
+
+# vi
+*.sw?
+
+#files from diff
+*.orig
+
+# C extensions
+*.so
+
 # Python-generated files
+.Python
+env/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 __pycache__/
 *.py[oc]
 build/
