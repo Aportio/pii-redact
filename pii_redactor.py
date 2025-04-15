@@ -18,12 +18,20 @@ class Scrub:
     def __init__(self):
         self.patterns = {
             "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
-            "phone": [r"\b\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}\b",], 
+            "phone": [
+                r"\b\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}\b",
+                r"(?:\+?(61|64))?\s?(?:\((?=.*\)))?(0?\d{1,3})\)?\s?(\d\d(?:[-\s](?=\d{3})|"
+                r"(?!\d\d[-\s]?\d[-\s]))\d\d[-\s]?\d[-\s]?\d{3}|\d{3,4}\s?\d{3,4})",
+            ],
             "ssn": r"\b\d{3}[-]?\d{2}[-]?\d{4}\b",
-            "ip_address_v4": r"\b(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\b",
+            "ip_address_v4": r"\b(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}"
+            r"(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\b",
             "ip_address_v6": r"\b(?:[0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}\b",
-            "hostname": r"\b(?:(?:[a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*((?:[A-Za-z]|(?:[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]))\.(?:[a-zA-Z]{2,})|(?:xn--[A-Za-z0-9]+))\b",
-            "uuid": r"\b(?:[0-9a-fA-F]){8}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){12}\b",
+            "hostname": r"\b(?:(?:[a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*((?:[A-Za-z]|"
+            r"(?:[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9]))\.(?:[a-zA-Z]{2,})|"
+            r"(?:xn--[A-Za-z0-9]+))\b",
+            "uuid": r"\b(?:[0-9a-fA-F]){8}-(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){4}-"
+            r"(?:[0-9a-fA-F]){4}-(?:[0-9a-fA-F]){12}\b",
         }
 
     def scrub_text(self, text: str) -> str:
@@ -37,7 +45,9 @@ class Scrub:
 
                         # Remove parentheses from matched phone numbers
                         matched_phone = re.sub(r"^\((\d{3})\)$", r"\1", matched_phone)
-                        scrubbed_text = scrubbed_text.replace(matched_phone, "[REDACTED]")
+                        scrubbed_text = scrubbed_text.replace(
+                            matched_phone, "[REDACTED]"
+                        )
             else:
                 scrubbed_text = re.sub(pattern, "[REDACTED]", scrubbed_text)
 

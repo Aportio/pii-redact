@@ -13,4 +13,9 @@ dependencies = [
     "pandas==1.4.3",
     "pre-commit>=4.2.0",
     "pylint==3.3.6",
+    "halo==0.0.31",
+    "numpy>1.24.2",
+    "spacy==3.8.5",
+    "ipaddress==1.0.23",
+    "phonenumbers==8.13.8",
 ]
