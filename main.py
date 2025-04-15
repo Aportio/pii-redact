@@ -4,6 +4,10 @@
 # (c) 2025 Aportio Developments Ltd.
 # =========================================================
 
+import argparse
+
+from version import VERSION
+
 
 def get_aruments() -> dict:
     # create parser
@@ -24,7 +28,13 @@ def get_aruments() -> dict:
 
 
 def main():
-    print("Hello from pii-redact!")
+    """ """
+    # Get the PST or CSV file from the directory
+    # Extract the email content from the file
+    # Now loop through the files in the exported directory
+    # Redact the email content from them
+    # Save all the redacted data in a separate directory
+    print("")
 
 
 if __name__ == "__main__":
