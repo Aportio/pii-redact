@@ -1,0 +1,3 @@
+# Configuration for bandit security checking tool
+exclude_dirs:
+  - data/
