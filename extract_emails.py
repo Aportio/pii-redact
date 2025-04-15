@@ -88,7 +88,7 @@ def extract_emails(file_name: str, export_dir: str, raw_mappings: Optional[list]
         print(".", end="", flush=True)
 
         filename = str(uuid.uuid4())
-        path = f"data/{export_dir}/{filename}.json"
+        path = f"data/export/{filename}.json"
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(payload, f, ensure_ascii=False, indent=4)
 
