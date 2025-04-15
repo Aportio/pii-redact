@@ -23,7 +23,7 @@ repos:
   hooks:
   -   id: giticket
       stages: [commit-msg]
-      args: ['--regex=[Aa]2[-_]\d+', '--format={ticket} {commit_msg}']
+      args: ['--format={commit_msg}']
 - repo: https://github.com/PyCQA/flake8
   rev: "4.0.1"
   hooks:
