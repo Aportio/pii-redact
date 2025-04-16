@@ -14,7 +14,6 @@ from extract_emails import extract_emails
 from redact import redact_text
 from version import VERSION
 
-EXPORT_DIR = "data/export/"
 HEADERS_WITH_PII = [
     "from",
     "sender",
@@ -59,11 +58,9 @@ def redact_payload(payload: dict) -> dict:
     }
     """
     redacted_payload = payload
-    for key, _ in payload.get("headers", {}):
+    for key, value in payload.get("headers", {}).items():
         if key in HEADERS_WITH_PII:
-            redacted_payload["headers"][key] = redact_text(
-                payload.get("headers", {}).get(key, "")
-            )
+            redacted_payload["headers"][key] = redact_text(value)
     redacted_payload["plain"] = redact_text(payload.get("plain", ""))
     redacted_payload["html"] = redact_text(payload.get("html", ""))
     return redacted_payload
@@ -81,21 +78,23 @@ def main():
     redacted_dir = args.outdir
     redacted_dir_path = Path(redacted_dir, datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
     redacted_dir_path.mkdir(parents=True, exist_ok=True)
+    redacted_dir = str(redacted_dir_path)
+    print(redacted_dir)
 
     # Extract the email content from the file
-    extract_emails(file_name=file_name)
+    export_dir = extract_emails(file_name=file_name)
 
     # Now loop through the files in the exported directory
     # Redact the email content from them
     # Save all the redacted data in a separate directory
-    pathlist = Path(EXPORT_DIR).rglob("*.json")
+    pathlist = Path(export_dir).rglob("*.json")
     for path in pathlist:
         with open(str(path), encoding="utf-8") as f:
             payload = json.load(f)
             redacted_payload = redact_payload(payload)
             filename = os.path.basename(f.name)
-            path = redacted_dir_path / filename
-            with path.open(path, "w", encoding="utf-8") as outf:
+            filepath = f"{redacted_dir}/{filename}"
+            with open(str(filepath), "w", encoding="utf-8") as outf:
                 json.dump(redacted_payload, outf, ensure_ascii=False, indent=4)
 
 
