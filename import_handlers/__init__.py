@@ -8,9 +8,9 @@
 Expose the handler functions for the file formats.
 """
 
+from .constants import VALID_FIELDS
 from .pst import import_pst
 from .spreadsheet import import_spreadsheet
-from .constants import VALID_FIELDS
 
 __all__ = (
     "VALID_FIELDS",

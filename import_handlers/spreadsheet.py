@@ -8,16 +8,16 @@
 Handle import from spreadsheet files.
 """
 
-import pandas
+import pandas as pd
 
 from .utils import is_html, validate_email
 
 # Fields that we absolutely must have in a given spreadsheet file.
 REQUIRED_FIELDS = ["unique_id", "subject", "body", "date"]
-IMPORT_FIELDS = REQUIRED_FIELDS + ["to", "from"]
+IMPORT_FIELDS = [*REQUIRED_FIELDS, "to", "from"]
 
 # Filetypes that we support reading from.
-SUPPORTED_FILETYPE_READERS = {"csv": pandas.read_csv, "xlsx": pandas.read_excel}
+SUPPORTED_FILETYPE_READERS = {"csv": pd.read_csv, "xlsx": pd.read_excel}
 
 # The email list is global, so convert_to_json can access it inside the pandas loop
 email_list = []
@@ -54,13 +54,9 @@ def read_spreadsheet_emails(filename):
     reader_func = SUPPORTED_FILETYPE_READERS.get(file_ext, None)
     # If reader_func is None, we don't yet support using the given file type.
     if not reader_func:
-        supported_types_list = [
-            filetype for filetype in SUPPORTED_FILETYPE_READERS.keys()
-        ]
+        supported_types_list = [filetype for filetype in SUPPORTED_FILETYPE_READERS.keys()]
         supported_types = "\n".join(supported_types_list)
-        raise Exception(
-            f"Unsupported file extension type. Try one of: \n{supported_types}"
-        )
+        raise Exception(f"Unsupported file extension type. Try one of: \n{supported_types}")
     return reader_func(filename)
 
 
@@ -151,9 +147,7 @@ def convert_to_json(row):
     unique_id = str(row["unique_id"]).lstrip("<").rstrip(">")
     unique_id = f"<{unique_id}>"
 
-    sent_date = (
-        str(row["date"].isoformat()) if type(row["date"]) is not str else row["date"]
-    )
+    sent_date = str(row["date"].isoformat()) if type(row["date"]) is not str else row["date"]
 
     # Not required fields. These can be defaulted to something else if they don't exist.
     try:
@@ -220,18 +214,18 @@ def import_spreadsheet(file_name: str) -> list:
     """
 
     # Load the data into a pandas DataFrame
-    df = read_spreadsheet_emails(file_name)
+    input_sheet = read_spreadsheet_emails(file_name)
 
     # First, we should go through and convert all column headings to lowercase.
     # Note that this will copy the column with all its data and add it to the
     # DataFrame again, but with a lowercase version of the column name.
-    lowercase_column_headings(df)
+    lowercase_column_headings(input_sheet)
 
     # Check that all required fields exist in the DataFrame.
-    check_required_headings_exist(df)
+    check_required_headings_exist(input_sheet)
 
     # Use the DataFrame.apply() method to do something with each row in the DataFrame.
     # The passed-in function acts like a callback.
-    df.apply(convert_to_json, axis=1)
+    input_sheet.apply(convert_to_json, axis=1)
 
     return email_list

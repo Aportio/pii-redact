@@ -7,6 +7,7 @@
 """
 Common utility functions.
 """
+
 from email.utils import parseaddr
 
 
@@ -35,9 +36,7 @@ def is_html(email_body: str) -> bool:
     """
     Test the email for HTML tags.
     """
-    return (
-        "<html" in email_body and "</html" in email_body
-    ) or "text/html" in email_body
+    return ("<html" in email_body and "</html" in email_body) or "text/html" in email_body
 
 
 def validate_email(email_address: str) -> str:
