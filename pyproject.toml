@@ -12,7 +12,6 @@ dependencies = [
     "spacy==3.8.5",
     "ipaddress==1.0.23",
     "phonenumbers==8.13.8",
-    "scrubadubdub>=0.1.0",
     "regex>=2024.11.6",
     "pip>=25.0.1",
 ]
