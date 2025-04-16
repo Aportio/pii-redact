@@ -5,8 +5,18 @@ import re
 
 import spacy
 
+SPACY_LANGUAGE_MODEL = "en_core_web_md"
+
 # Load Spacy NLP model
-nlp = spacy.load("en_core_web_lg")
+try:
+    nlp = spacy.load(SPACY_LANGUAGE_MODEL)
+except OSError:
+    print(f"Downloading spacy language model'{SPACY_LANGUAGE_MODEL}'")
+
+    from spacy.cli import download
+
+    download(SPACY_LANGUAGE_MODEL)
+    nlp = spacy.load(SPACY_LANGUAGE_MODEL)
 
 
 class Scrub:
@@ -70,18 +80,3 @@ class Scrub:
             elif isinstance(value, str):
                 data[key] = self.scrub_text(value)
         return data
-
-
-if __name__ == "__main__":
-    pii_scrubber = Scrub()
-    file = "<some file path>"
-    file_format = "<one of 'json', 'ndjson', 'xml' or 'txt'>"
-
-    with open(file) as f:
-        input_data = f.read()
-
-    scrubbed_data = pii_scrubber.scrub(input_data, file_format)
-    print("Original data:")
-    print(input_data)
-    print("Scrubbed data:")
-    print(scrubbed_data)
