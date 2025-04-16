@@ -1,18 +1,12 @@
 [project]
 name = "pii-redact"
 version = "0.1.0"
-description = "Add your description here"
+description = "Redact Personally Identifiable Information from emails"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "bandit>=1.8.3",
-    "black>=25.1.0",
-    "bump2version>=1.0.1",
-    "flake8>=7.2.0",
     "openpyxl==3.0.10",
     "pandas==1.4.3",
-    "pre-commit>=4.2.0",
-    "pylint==3.3.6",
     "halo==0.0.31",
     "numpy==1.26.4",
     "spacy==3.8.5",
@@ -20,4 +14,30 @@ dependencies = [
     "phonenumbers==8.13.8",
     "scrubadubdub>=0.1.0",
     "regex>=2024.11.6",
+]
+
+# [project.scripts]
+# "redact" = "pii-redact.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = false
+dev-dependencies = [
+    "bandit>=1.8.3",
+    "bump2version>=1.0.1",
+    "licensecheck>=2025.1.0",
+    "pre-commit>=4.2.0",
+    "ruff==0.11.5",
+]
+
+[tool.pyright]
+typeCheckingMode = "off"
+
+[tool.bandit]
+# Configuration for bandit security checking tool
+exclude_dirs = [
+    "**/test*.py"
 ]
