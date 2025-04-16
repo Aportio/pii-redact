@@ -6,7 +6,7 @@ It uses the [scrubadubdub](https://github.com/kylemclaren/scrub), which leverage
 
 To provide customization of the [Spacy language model](https://spacy.io/models/en) used for processing,
 we have copied the original [scrub.py](https://github.com/kylemclaren/scrub/blob/master/scrubadubdub/scrub.py) file from [scrubadubdub](https://github.com/kylemclaren/scrub).
-Our copy can be found as [vendor/scrib.py](./vendor/scrub.py).
+Our copy can be found as [vendor/scrub.py](./vendor/scrub.py).
 
 ## Environment
 Download and install [uv](https://github.com/astral-sh/uv)
