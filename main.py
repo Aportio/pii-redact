@@ -5,13 +5,14 @@
 # =========================================================
 
 import argparse
-import os
 import json
-
-from version import VERSION
+import os
+from datetime import datetime
 from pathlib import Path
-from redact_emails import redact_text
+
 from extract_emails import extract_emails
+from redact import redact_text
+from version import VERSION
 
 EXPORT_DIR = "data/export/"
 HEADERS_WITH_PII = [
@@ -29,9 +30,7 @@ def get_aruments() -> dict:
 
     # add arguments to the parser
     parser.add_argument("file", help="File to process(PST/CSV)")
-    parser.add_argument(
-        "-o", "--outdir", help="Output directory", default="redacted-emails"
-    )
+    parser.add_argument("-o", "--outdir", help="Output directory", default="redacted-emails")
     # parse the arguments
     args = parser.parse_args()
     return args
@@ -80,6 +79,8 @@ def main():
 
     # Redacted email directory
     redacted_dir = args.outdir
+    redacted_dir_path = Path(redacted_dir, datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+    redacted_dir_path.mkdir(parents=True, exist_ok=True)
 
     # Extract the email content from the file
     extract_emails(file_name=file_name)
@@ -93,8 +94,8 @@ def main():
             payload = json.load(f)
             redacted_payload = redact_payload(payload)
             filename = os.path.basename(f.name)
-            path = f"data/{redacted_dir}/{filename}"
-            with open(path, "w", encoding="utf-8") as outf:
+            path = redacted_dir_path / filename
+            with path.open(path, "w", encoding="utf-8") as outf:
                 json.dump(redacted_payload, outf, ensure_ascii=False, indent=4)
 
 
