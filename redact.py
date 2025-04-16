@@ -8,7 +8,7 @@
 Tool to redact emails in JSON format and output to directory
 """
 
-from scrubadubdub import Scrub
+from vendor.scrub import Scrub
 
 
 class PIIScrub(Scrub):
