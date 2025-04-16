@@ -60,7 +60,7 @@ def redact_payload(payload: dict) -> dict:
     }
     """
     redacted_payload = payload
-    for key, value in payload.get("headers", {}):
+    for key, value in payload.get("headers", {}).items():
         if key in HEADERS_WITH_PII:
             redacted_payload["headers"][key] = redact_text(
                 payload.get("headers", {}).get(key, "")
@@ -91,7 +91,6 @@ def main():
     for path in pathlist:
         with open(str(path), "r", encoding="utf-8") as f:
             payload = json.load(f)
-            redacted_payload = payload
             redacted_payload = redact_payload(payload)
             filename = os.path.basename(f.name)
             path = f"data/{redacted_dir}/{filename}"
