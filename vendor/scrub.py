@@ -5,7 +5,7 @@ import re
 
 import spacy
 
-SPACY_LANGUAGE_MODEL = "en_core_web_md"
+SPACY_LANGUAGE_MODEL = "en_core_web_lg"
 
 # Load Spacy NLP model
 try:
