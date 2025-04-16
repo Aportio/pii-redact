@@ -3,19 +3,18 @@
 #
 # (c) 2025 Aportio Developments Ltd.
 # =========================================================
-
+# ruff: noqa: S603, S607
 """
 Handle import from Microsoft PST files.
 """
+
 import datetime
 import email
 import os
-import subprocess
+import subprocess  # nosec
 import tempfile
-from typing import Tuple, List
 
 from .utils import is_html, lowercase_keys
-
 
 IGNORE_DIR_LIST = [
     "/Sent Items/",
@@ -31,12 +30,12 @@ def run_pffexport(*, pst_file_path: str, extraction_path: str) -> None:
     """
     print(f"Extracting data from '{pst_file_path}'.")
     # Run pff-extractor on the PST file found in the config, and export it to tmp.
-    pffexport_process = subprocess.run(
-        ["pffexport", "-q", "-t", extraction_path, pst_file_path], capture_output=True
+    pffexport_process = subprocess.run(  # nosec
+        ["pffexport", "-q", "-t", extraction_path, pst_file_path],
+        capture_output=True,
+        check=False,
     )
-    print(
-        f"Completed extraction of data from '{pst_file_path}' to '{extraction_path}'."
-    )
+    print(f"Completed extraction of data from '{pst_file_path}' to '{extraction_path}'.")
     if pffexport_process.returncode != 0:
         raise Exception(
             "there was an error running pffexport: "
@@ -44,7 +43,7 @@ def run_pffexport(*, pst_file_path: str, extraction_path: str) -> None:
         )
 
 
-def get_required_data_from_extracted_pst(processed_pst_path: str) -> Tuple[dict, dict]:
+def get_required_data_from_extracted_pst(processed_pst_path: str) -> tuple[dict, dict]:
     """
     Function to extract the paths for messages and headers.
     """
@@ -59,7 +58,6 @@ def get_required_data_from_extracted_pst(processed_pst_path: str) -> Tuple[dict,
         # Search for all folders that start with MessageXXX
         current_dir = current_dir_path.split("/")[-1]
         if current_dir.startswith("Message"):
-
             message_number = current_dir.split("Message")[-1]
             now = datetime.datetime.now().timestamp()
             unique_message_id = f"{message_number}__{now}"
@@ -129,9 +127,7 @@ def get_json_from_email_data(*, headers: dict, message: str) -> dict:
     # These values come from the email headers, since they aren't available
     # from the message object.
     now = datetime.datetime.now()
-    message_id = headers.get(
-        "message-id", f"<{now.timestamp()}_pst_missing_message_id>"
-    )
+    message_id = headers.get("message-id", f"<{now.timestamp()}_pst_missing_message_id>")
     recipient = headers.get("to", "analysis@aportio-analysis.com")
     sender = headers.get("from", "client@aportio-analysis.com")
     cc = headers.get("cc", "")
@@ -171,20 +167,18 @@ def get_json_from_email_data(*, headers: dict, message: str) -> dict:
     return json_body
 
 
-def process_messages(message_dict: dict) -> List[dict]:
+def process_messages(message_dict: dict) -> list[dict]:
     """
     Get data from all the messages in the dict, then create the json payload.
     """
     print("Transforming emails into payloads.")
     messages_payloads = []
-    for _, message_paths in message_dict.items():
+    for message_paths in message_dict.values():
         message = read_file(file_path=message_paths["message"])
         headers = extract_headers_file(headers_file=message_paths["headers"])
         message_json = get_json_from_email_data(headers=headers, message=message)
         messages_payloads.append(message_json)
-    print(
-        f"Completed transforming emails into payloads. Total {len(messages_payloads)}"
-    )
+    print(f"Completed transforming emails into payloads. Total {len(messages_payloads)}")
     return messages_payloads
 
 
@@ -195,9 +189,7 @@ def import_pst(pst_file_location: str) -> list:
     with tempfile.TemporaryDirectory() as extraction_path:
         # Now extract the PST file
         try:
-            run_pffexport(
-                pst_file_path=pst_file_location, extraction_path=extraction_path
-            )
+            run_pffexport(pst_file_path=pst_file_location, extraction_path=extraction_path)
             extraction_path += ".export/"
             html_data, text_data = get_required_data_from_extracted_pst(
                 processed_pst_path=extraction_path

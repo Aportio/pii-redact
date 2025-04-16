@@ -60,7 +60,7 @@ def redact_payload(payload: dict) -> dict:
     }
     """
     redacted_payload = payload
-    for key, value in payload.get("headers", {}).items():
+    for key, _ in payload.get("headers", {}):
         if key in HEADERS_WITH_PII:
             redacted_payload["headers"][key] = redact_text(
                 payload.get("headers", {}).get(key, "")
@@ -89,7 +89,7 @@ def main():
     # Save all the redacted data in a separate directory
     pathlist = Path(EXPORT_DIR).rglob("*.json")
     for path in pathlist:
-        with open(str(path), "r", encoding="utf-8") as f:
+        with open(str(path), encoding="utf-8") as f:
             payload = json.load(f)
             redacted_payload = redact_payload(payload)
             filename = os.path.basename(f.name)
