@@ -88,7 +88,11 @@ def main():
     # Redact the email content from them
     # Save all the redacted data in a separate directory
     pathlist = Path(export_dir).rglob("*.json")
-    for path in pathlist:
+    print("Redacting files")
+    for counter, path in enumerate(pathlist):
+        if (counter % 50) == 0:
+            print(f"\n[{counter:04}]", end="", flush=True)
+        print(".", end="", flush=True)
         with open(str(path), encoding="utf-8") as f:
             payload = json.load(f)
             redacted_payload = redact_payload(payload)
@@ -96,6 +100,7 @@ def main():
             filepath = f"{redacted_dir}/{filename}"
             with open(str(filepath), "w", encoding="utf-8") as outf:
                 json.dump(redacted_payload, outf, ensure_ascii=False, indent=4)
+    print("\nDone.")
 
 
 if __name__ == "__main__":

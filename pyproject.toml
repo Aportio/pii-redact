@@ -5,13 +5,13 @@ description = "Redact Personally Identifiable Information from emails"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "openpyxl==3.0.10",
-    "pandas==1.4.3",
-    "halo==0.0.31",
-    "numpy==1.26.4",
-    "spacy==3.8.5",
-    "ipaddress==1.0.23",
-    "phonenumbers==8.13.8",
+    "openpyxl>=3.0.10",
+    "pandas>=1.4.3",
+    "halo>=0.0.31",
+    "numpy>=1.26.4",
+    "spacy>=3.8.5",
+    "ipaddress>=1.0.23",
+    "phonenumbers>=8.13.8",
     "regex>=2024.11.6",
     "pip>=25.0.1",
 ]
