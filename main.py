@@ -90,8 +90,9 @@ def main():
     pathlist = Path(export_dir).rglob("*.json")
     print("Redacting files")
     for counter, path in enumerate(pathlist):
-        if (counter % 5) == 0:
-            print(".", end="")
+        if (counter % 50) == 0:
+            print(f"\n[{counter:04}]", end="", flush=True)
+        print(".", end="", flush=True)
         with open(str(path), encoding="utf-8") as f:
             payload = json.load(f)
             redacted_payload = redact_payload(payload)
