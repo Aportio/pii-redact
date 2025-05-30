@@ -1,6 +1,6 @@
 [project]
 name = "pii-redact"
-version = "1.0.1"
+version = "1.0.2"
 description = "Redact Personally Identifiable Information from emails"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -14,18 +14,22 @@ dependencies = [
     "phonenumbers>=8.13.8",
     "regex>=2024.11.6",
     "pip>=25.0.1",
+    "en-core-web-lg",
 ]
 
 [tool.uv]
 package = false
 dev-dependencies = [
     "bandit>=1.8.3",
-    "bump2version>=1.0.1",
+    "bump2version",
     "licensecheck>=2025.1.0",
     "pre-commit>=4.2.0",
     "pytest>=8.3.5",
     "ruff==0.11.5",
 ]
+
+[tool.uv.sources]
+en-core-web-lg = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl" }
 
 [tool.pyright]
 typeCheckingMode = "off"
