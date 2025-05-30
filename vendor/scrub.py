@@ -20,6 +20,10 @@ except OSError:
 
 
 class Scrub:
+    REDACT_ENTIES = ["PERSON", "DATE", "LOC", "FAC", "ORG", "GPE"]
+
+    REDACTION_TEXT = "[REDACTED]"
+
     def __init__(self):
         self.patterns = {
             "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
@@ -41,9 +45,9 @@ class Scrub:
 
                     # Remove parentheses from matched phone numbers
                     matched_phone = re.sub(r"^\((\d{3})\)$", r"\1", matched_phone)
-                    scrubbed_text = scrubbed_text.replace(matched_phone, "[REDACTED]")
+                    scrubbed_text = scrubbed_text.replace(matched_phone, self.REDACTION_TEXT)
             else:
-                scrubbed_text = re.sub(pattern, "[REDACTED]", scrubbed_text)
+                scrubbed_text = re.sub(pattern, self.REDACTION_TEXT, scrubbed_text)
 
         scrubbed_text = self.scrub_pii_with_nlp(scrubbed_text)
         return scrubbed_text
@@ -53,8 +57,8 @@ class Scrub:
         final_text = text
 
         for name in nlp_doc.ents:
-            if name.label_ == "PERSON":
-                final_text = re.sub(re.escape(name.text), "[REDACTED]", final_text)
+            if name.label_ in self.REDACT_ENTIES:
+                final_text = re.sub(re.escape(name.text), self.REDACTION_TEXT, final_text)
         return final_text
 
     def scrub(self, input_data: str | dict, original_format: str = "txt") -> str | dict:
