@@ -10,6 +10,52 @@ Tool to redact emails in JSON format and output to directory
 
 from vendor.scrub import Scrub
 
+STREET_SUFFIXES = [
+    "Street",
+    "St",
+    "Lane",
+    "Ln",
+    "Avenue",
+    "Ave",
+    "Av",
+    "Road",
+    "Rd",
+    "Drive",
+    "Dr",
+    "Terrace",
+    "Tce",
+    "Place",
+    "PlCrescent",
+    "Cres",
+    "Highway",
+    "Hwy",
+    "Parade",
+    "Pde",
+    "Close",
+    "Cl",
+    "Way",
+    "Square",
+    "Sq",
+    "Quay",
+    "Boulevard",
+    "Blvd",
+    "Esplanade",
+    "Esp",
+    "Track",
+    "Trk",
+    "Rise",
+    "Loop",
+    "Grove",
+    "Gr",
+    "Court",
+    "Ct",
+    "Loop",
+    "Parkway",
+    "Pkwy",
+    "Circle",
+    "Cir",
+]
+
 
 class PIIScrub(Scrub):
     def __init__(self):
@@ -19,7 +65,7 @@ class PIIScrub(Scrub):
             ("nz_bank", r"\b\d{2}-\d{4}-\d{7}-\d{2,3}\b"),
             (
                 "street",
-                r"(?i)\b\d{1,}\s{0,}[\w\s]+?\s{1,}(Street|St|Lane|Ln|Avenue|Ave|Av|Road|Rd)\b",
+                rf"(?i)\b\d{{1,}}\s{{0,}}[\w\s]+?\s{{1,}}({'|'.join(STREET_SUFFIXES)})\b",
             ),
             (
                 "phone",
