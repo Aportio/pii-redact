@@ -1,6 +1,6 @@
 [project]
 name = "pii-redact"
-version = "1.0.2"
+version = "1.0.3"
 description = "Redact Personally Identifiable Information from emails"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -10,7 +10,7 @@ dependencies = [
     "halo>=0.0.31",
     "numpy>=1.26.4",
     "spacy>=3.8.5",
-    "ipaddress>=1.0.23",
+    "ipaddress>=1.0.33",
     "phonenumbers>=8.13.8",
     "regex>=2024.11.6",
     "pip>=25.0.1",

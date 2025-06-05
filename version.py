@@ -9,4 +9,4 @@ Current app version.
 """
 
 # This version number should be incremented by bump2version
-VERSION = "v1.0.2"
+VERSION = "v1.0.3"
