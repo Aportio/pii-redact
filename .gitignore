@@ -1,3 +1,6 @@
+.env
+.envrc
+
 # PST files and PST extractor configs
 *.pst
 *.csv

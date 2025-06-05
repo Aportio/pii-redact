@@ -63,6 +63,7 @@ class PIIScrub(Scrub):
         self.patterns = [
             ("bank_iban", r"\b([A-Z]{2}\d{2}[-\s]{0,1}[A-Z0-9-\s]{1,33}\d)\b"),
             ("nz_bank", r"\b\d{2}-\d{4}-\d{7}-\d{2,3}\b"),
+            ("date", r"\b\d{1,2}/\d{1,2}/\d{2,4}\b"),
             (
                 "street",
                 rf"(?i)\b\d{{1,}}\s{{0,}}[\w\s]+?\s{{1,}}({'|'.join(STREET_SUFFIXES)})\b",
@@ -71,9 +72,17 @@ class PIIScrub(Scrub):
                 "phone",
                 r"(?<![-\d])(?:\+?(61|64))?\s?(?:\((?=.*\)))?(0?\d{1,3})\)?\s?(\d\d(?:[-\s](?=\d{3})|(?!\d\d[-\s]?\d[-\s]))\d\d[-\s]?\d[-\s]?\d{3}|\d{3,4}\s?\d{3,4})(?![-\d])",
             ),
+            ("vehicle_rego", r"\b[A-Z]\d{2}[-\s][A-Z]{3,4}\b"),
+            ("vehicle_rego", r"\b\d{3}[-\s]\d{3,4}\b"),
+            ("vehicle_rego", r"\b\d[A-Z][\d]{4}[A-Z]\b"),
+            ("vehicle_rego", r"\b\d[A-Z][\d]{5}\b"),
+            ("vehicle_rego", r"\b\d[-\s][A-Z0-9]{5,6}\b"),
+            ("vehicle_rego", r"\b[A-Z]{2,3}[-\s]?[A-Z0-9]{3}\b"),
+            ("vehicle_rego", r"\b\d{3}[A-Z]\d{3}\b"),
             ("vehicle_rego", r"\b\d{0,1}\s{0,1}[A-Z]{2,4}[-\s]?[A-Z]{0,1}\d{2,4}\b"),
-            ("vehicle_rego", r"\b\d{2,4}[-\s]?[A-Z]{2,4}\b"),
-            ("vehicle_rego", r"\b[A-Z]{2}[-\s]?\d{5}\b"),
+            ("vehicle_rego", r"\b\d{2,4}[-\s]?[A-Z]{1,4}\b"),
+            ("vehicle_rego", r"\b[A-Z]{1,2}[-\s]?\d{5,6}\b"),
+            ("vehicle_rego", r"\b\d{3,7}\b"),
             (
                 "url",
                 r"\b((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*",
