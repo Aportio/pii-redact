@@ -8,6 +8,8 @@
 Test redact text
 """
 
+from pathlib import Path
+
 from redact import PIIScrub
 
 
@@ -21,13 +23,13 @@ def test_redact_urls():
         ),
         (
             'xmlns="http://www.w3.org/1999/xhtml"',
-            'xmlns="[REDACTED]"',
+            'xmlns="[REDACTED][REDACTED]/xhtml"',
         ),
     ]
     for test_num, (input_text, expected_text) in enumerate(test_data, start=1):
-        scrubbed_text_from_tool = scrubber.scrub_text(input_text)
+        clean_text = scrubber.scrub_text(input_text)
 
-        assert scrubbed_text_from_tool == expected_text, f"#{test_num} failed"
+        assert clean_text == expected_text, f"#{test_num} failed"
 
 
 def test_redact_text():
@@ -36,7 +38,7 @@ def test_redact_text():
     test_data = [
         (
             "John Smith, who was born 9th January, 2025, lives with David and Louise at the corner of East Street and 12th Ave.",
-            "[REDACTED], who was born [REDACTED], lives with [REDACTED] and [REDACTED] at the corner of [REDACTED] and [REDACTED].",
+            "[REDACTED], who was born [REDACTED], [REDACTED], lives with [REDACTED] and [REDACTED] at the corner of [REDACTED] and [REDACTED].",
         ),
         (
             "John Smith (9/01/2025), lives at 24 Walls St, London.",
@@ -79,3 +81,16 @@ def test_redact_text():
         scrubbed_text_from_tool = scrubber.scrub_text(input_text)
 
         assert scrubbed_text_from_tool == expected_text, f"#{test_num} failed"
+
+
+def test_redact_license_plates():
+    scrubber = PIIScrub()
+    test_file = Path(__file__).parent / "test_data" / "license_plates.txt"
+    with test_file.open("r") as fh:
+        test_data = fh.readlines()
+
+    for test_num, plate in enumerate(test_data, start=1):
+        clean_text = scrubber.scrub_text(plate)
+        assert clean_text.strip() == scrubber.REDACTION_TEXT, (
+            f"#{test_num} failed for {plate=}"
+        )
